@@ -1,4 +1,3 @@
 compose.yaml
 admin-ui/Dockerfile
-user-api/Dockerfile 
 user-ui/Dockerfile
