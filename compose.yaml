@@ -1,0 +1,48 @@
+version: '3'
+services:
+  adminapi:
+    build: ./admin-api
+    ports:
+      - "1005:1004"
+    depends_on:
+      - mongodb
+    environment:
+      MONGO_URL: mongodb://mongoadmin:secret@mongodb:27017/?retryWrites=true&w=majority
+ 
+  adminui:
+    build: ./admin-ui
+    ports:
+      - "3001:3000"
+    depends_on:
+      - adminapi
+    environment:
+      REACT_APP_API_URL: http://adminapi:1005
+ 
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongoadmin
+      MONGO_INITDB_ROOT_PASSWORD: secret 
+      MONGO_INITDB_DATABASE: my_db mongo
+
+  
+  userapi:
+    build: ./user-api
+    ports:
+      - "1004:1004"
+    depends_on:
+      - mongodb
+    environment:
+      MONGO_URL: mongodb://mongoadmin:secret@mongodb:27017/?retryWrites=true&w=majority
+      ADMIN_EMAIL: "mail@shubhamksawant.in"
+ 
+  userui:
+    build: ./user-ui
+    ports:
+      - "3000:3000"
+    depends_on:
+      - userapi
+    environment:
+      REACT_APP_API_URL: http://userapi:1004
