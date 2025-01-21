@@ -33,6 +33,16 @@ pipeline {
             }
             
         }
+
+        stage('Initialize the variables') {
+            // Each stage is made up of steps
+            steps{
+                script{
+                    CODE_VERSION="${BUILD_NUMBER}-${ENV}"
+                    // ZIP_NODE="abcdefgh-0.0.${CODE_VERSION}.zip"
+                }
+            }                
+        }
         
         stage('Checkout') {
             steps {
@@ -57,7 +67,16 @@ pipeline {
         stage('Push to ecr') {
             steps {
                 
-                sh "ls "
+               echo "Pushing images to Amazon ECR..."
+                sh '''
+                    aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO_URI
+                    PROJECT_NAME="${JOB_NAME.substring(JOB_NAME.lastIndexOf('/') + 1, JOB_NAME.length())}"
+                    echo $PROJECT_NAME
+                    docker tag ${PROJECT_NAME}-adminapi:latest $ECR_REPO_URI:adminapi:latest
+                    docker tag ${PROJECT_NAME}-adminui:latest $ECR_REPO_URI:adminui:latest
+                    docker tag ${PROJECT_NAME}-userapi:latest $ECR_REPO_URI:userapi:latest
+                    docker tag ${PROJECT_NAME}-userui:latest $ECR_REPO_URI:userui:latest
+                '''
             }
             
         }
