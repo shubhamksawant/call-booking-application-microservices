@@ -62,6 +62,8 @@ pipeline {
                 sh '''
     
                     echo $JOB_NAME
+                    PROJECT_NAME=$(echo $JOB_NAME | cut -d'/' -f1)
+                    echo $PROJECT_NAME
                     docker tag ${PROJECT_NAME}-adminapi:latest $ECR_REPO_URI$ECR_REPO_NAME:adminapi:latest
                     docker tag ${PROJECT_NAME}-adminui:latest $ECR_REPO_URI$ECR_REPO_NAME:adminui:latest
                     docker tag ${PROJECT_NAME}-userapi:latest $ECR_REPO_URI$ECR_REPO_NAME:userapi:latest
