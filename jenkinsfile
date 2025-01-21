@@ -34,16 +34,6 @@ pipeline {
             
         }
 
-        stage('Initialize the variables') {
-            // Each stage is made up of steps
-            steps{
-                script{
-                    CODE_VERSION="${BUILD_NUMBER}-${ENV}"
-                    // ZIP_NODE="abcdefgh-0.0.${CODE_VERSION}.zip"
-                }
-            }                
-        }
-        
         stage('Checkout') {
             steps {
                 checkout scmGit(
