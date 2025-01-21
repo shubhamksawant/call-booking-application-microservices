@@ -2,10 +2,11 @@ pipeline {
     agent { label 'wsl2' }
     
      parameters {
-        // booleanParam(name: 'DEPLOY_SERVICES', defaultValue: true, description: 'Run docker-compose up to deploy services')
-        // booleanParam(name: 'DEPLOY_SERVICES', defaultValue: true, description: 'Run docker-compose down to stop services after pipeline')
+        // Choice parameter for deployment action
+        choice(name: 'DEPLOY_SERVICES', choices: ['No', 'Yes'], description: 'Run docker-compose up to deploy services')
+        // Choice parameter for clean-up action
+        choice(name: 'CLEAN_UP_SERVICES', choices: ['Yes', 'No'], description: 'Run docker-compose down to stop services after pipeline')
         
-        choice(name: 'Deploy/Clean', choices: ['DEPLOY_SERVICES', 'DEPLOY_SERVICES'], description: 'Choose')
         choice(name: 'BRANCH', choices: ['main', 'staging', 'prod'], description: 'Choose the deployment environment')
     }
     
@@ -58,7 +59,7 @@ pipeline {
             
         stage('Docker compose up') {
             when {
-                expression { params.Deploy/Clean }
+                expression { return params.DEPLOY_SERVICES == 'Yes' }
             }
             steps {
               sh "docker-compose stop"
@@ -69,7 +70,7 @@ pipeline {
         
         stage('Docker compose down') {
             when {
-                expression {params.Deploy/Clean}
+                expression { return params.CLEAN_UP_SERVICES == 'Yes' }
             }
             steps {
               sh "docker-compose down"
