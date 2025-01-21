@@ -1,0 +1,81 @@
+pipeline {
+    agent { label 'wsl2' }
+    
+     parameters {
+        // booleanParam(name: 'DEPLOY_SERVICES', defaultValue: true, description: 'Run docker-compose up to deploy services')
+        // booleanParam(name: 'DEPLOY_SERVICES', defaultValue: true, description: 'Run docker-compose down to stop services after pipeline')
+        
+        choice(name: 'Deploy/Clean', choices: ['DEPLOY_SERVICES', 'DEPLOY_SERVICES'], description: 'Choose')
+        choice(name: 'BRANCH', choices: ['main', 'staging', 'prod'], description: 'Choose the deployment environment')
+    }
+    
+    environment {
+        REPO_URL = "https://github.com/shubhamksawant/call-booking-application-microservices.git"
+        AWS_REGION = "your-aws-region"
+        ECR_REPO_URI = "your-ecr-repo-uri"
+        DOCKER_COMPOSE_FILE = "docker-compose.yaml"
+    }
+
+    stages {
+        stage('Check tools') {
+            steps {
+                echo "checking versions"
+                sh "docker --version"
+                sh "docker-compose --version"
+                sh "git --version"
+                sh "ls "
+            }
+            
+        }
+        
+        stage('Checkout') {
+            steps {
+                checkout scmGit(
+                branches: [[name: "*/${params.BRANCH}"]],
+                extensions: [], 
+                userRemoteConfigs: [[url: "${REPO_URL}"]]
+                 )
+                sh "ls "
+            }
+            
+        }
+        
+        stage('Build') {
+            steps {
+              
+
+                sh "docker-compose build"
+            }
+        }
+            
+        stage('Push to ecr') {
+            steps {
+                
+                sh "ls "
+            }
+            
+        }
+            
+        stage('Docker compose up') {
+            when {
+                expression { params.Deploy/Clean }
+            }
+            steps {
+              sh "docker-compose stop"
+              sh "docker-compose up -d"
+            }
+            
+        }
+        
+        stage('Docker compose down') {
+            when {
+                expression {params.Deploy/Clean}
+            }
+            steps {
+              sh "docker-compose down"
+            }
+            
+        }
+        
+      }
+    }
