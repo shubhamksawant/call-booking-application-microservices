@@ -61,7 +61,8 @@ pipeline {
                echo "Pushing images to Amazon ECR..."
                 sh '''
                     echo $JOB_NAME
-                    PROJECT_NAME=$(echo $JOB_NAME | sed 's/\//_/')
+                    PROJECT_NAME=$(echo $JOB_NAME | cut -d'/' -f1)
+                    BRANCH=$(echo $JOB_NAME | cut -d'/' -f2)   
                     echo $PROJECT_NAME
                     docker images
                     docker tag ${PROJECT_NAME}-adminapi:latest $ECR_REPO_URI$ECR_REPO_NAME:latest
