@@ -10,6 +10,11 @@ pipeline {
         choice(name: 'BRANCH', choices: ['main', 'staging', 'prod'], description: 'Choose the deployment environment')
     }
     
+     properties([
+        // Discard old builds - keep only the last 10 builds or builds that are not older than 30 days
+        buildDiscarder(logRotator(numToKeepStr: '1', daysToKeepStr: '2'))
+    ])
+
     environment {
         REPO_URL = "https://github.com/shubhamksawant/call-booking-application-microservices.git"
         AWS_REGION = "your-aws-region"
