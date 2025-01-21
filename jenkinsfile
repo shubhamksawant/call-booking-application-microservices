@@ -17,8 +17,9 @@ pipeline {
 
     environment {
         REPO_URL = "https://github.com/shubhamksawant/call-booking-application-microservices.git"
-        AWS_REGION = "your-aws-region"
-        ECR_REPO_URI = "your-ecr-repo-uri"
+        AWS_REGION = "us-east-1"
+        ECR_REPO_URI = "public.ecr.aws/e4t9p7u2"
+        ECR_REPO_NAME =  "/call-booking-application-microservices"
         DOCKER_COMPOSE_FILE = "docker-compose.yaml"
     }
 
@@ -62,10 +63,10 @@ pipeline {
                     aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO_URI
                     PROJECT_NAME="${JOB_NAME.substring(JOB_NAME.lastIndexOf('/') + 1, JOB_NAME.length())}"
                     echo $PROJECT_NAME
-                    docker tag ${PROJECT_NAME}-adminapi:latest $ECR_REPO_URI:adminapi:latest
-                    docker tag ${PROJECT_NAME}-adminui:latest $ECR_REPO_URI:adminui:latest
-                    docker tag ${PROJECT_NAME}-userapi:latest $ECR_REPO_URI:userapi:latest
-                    docker tag ${PROJECT_NAME}-userui:latest $ECR_REPO_URI:userui:latest
+                    docker tag ${PROJECT_NAME}-adminapi:latest $ECR_REPO_URI$ECR_REPO_NAME:adminapi:latest
+                    docker tag ${PROJECT_NAME}-adminui:latest $ECR_REPO_URI$ECR_REPO_NAME:adminui:latest
+                    docker tag ${PROJECT_NAME}-userapi:latest $ECR_REPO_URI$ECR_REPO_NAME:userapi:latest
+                    docker tag ${PROJECT_NAME}-userui:latest $ECR_REPO_URI$ECR_REPO_NAME:userui:latest
                 '''
             }
             
