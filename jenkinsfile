@@ -65,10 +65,10 @@ pipeline {
                     BRANCH=$(echo $JOB_NAME | cut -d'/' -f2)   
                     echo $PROJECT_NAME
                     docker images
-                    docker tag ${PROJECT_NAME}-adminapi:latest $ECR_REPO_URI$ECR_REPO_NAME:latest
-                    docker tag ${PROJECT_NAME}-adminui:latest $ECR_REPO_URI$ECR_REPO_NAME:latest
-                    docker tag ${PROJECT_NAME}-userapi:latest $ECR_REPO_URI$ECR_REPO_NAME:latest
-                    docker tag ${PROJECT_NAME}-userui:latest $ECR_REPO_URI$ECR_REPO_NAME:latest
+                    docker tag ${PROJECT_NAME}_${BRANCH}-adminapi:latest $ECR_REPO_URI$ECR_REPO_NAME:latest
+                    docker tag ${PROJECT_NAME}_${BRANCH}-adminui:latest $ECR_REPO_URI$ECR_REPO_NAME:latest
+                    docker tag ${PROJECT_NAME}_${BRANCH}-userapi:latest $ECR_REPO_URI$ECR_REPO_NAME:latest
+                    docker tag ${PROJECT_NAME}_${BRANCH}-userui:latest $ECR_REPO_URI$ECR_REPO_NAME:latest
                 '''
             }
             
