@@ -60,8 +60,8 @@ pipeline {
                 
                echo "Pushing images to Amazon ECR..."
                 sh '''
-                    PROJECT_NAME="${JOB_NAME.substring(JOB_NAME.lastIndexOf('/') + 1, JOB_NAME.length())}"
-                    echo $PROJECT_NAME
+    
+                    echo $JOB_NAME
                     docker tag ${PROJECT_NAME}-adminapi:latest $ECR_REPO_URI$ECR_REPO_NAME:adminapi:latest
                     docker tag ${PROJECT_NAME}-adminui:latest $ECR_REPO_URI$ECR_REPO_NAME:adminui:latest
                     docker tag ${PROJECT_NAME}-userapi:latest $ECR_REPO_URI$ECR_REPO_NAME:userapi:latest
